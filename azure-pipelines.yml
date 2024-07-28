@@ -2,14 +2,17 @@ trigger:
 - main  # Define the branch to trigger the pipeline on
 
 pool:
-  name: 'my-computer'  # Use the latest Ubuntu agent
+  name: 'my-computer'  # Use the self-hosted agent pool
 
 variables:
-  # Define your environment-specific variables here
   buildConfiguration: 'production'
-  # Add any other variables you need for deployment, like connection strings, etc.
 
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'  # Specify the version of Node.js to use
+  displayName: 'Install Node.js'
+
 - script: |
     npm install
     npm run build-prod
@@ -20,5 +23,3 @@ steps:
     pathtoPublish: '$(Build.SourcesDirectory)/dist'
     artifactName: 'angular-app'
   displayName: 'Publish Build Artifacts'
-
-# Add additional steps for deployment here, like deploying to Azure, AWS, or a custom server.
